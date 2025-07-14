@@ -13,6 +13,7 @@ class ScoreboardViewModel: ObservableObject {
     
     @Published var matchData = MatchData()
     @Published var shouldDismiss = false
+    @Published var isTieBreak =  false
     
     let sessionManager = WatchSessionManager()
     
@@ -55,9 +56,6 @@ class ScoreboardViewModel: ObservableObject {
             pointB = currentPoints
         }
     }
-    func tieBreakSumPoint() {
-        
-    }
     
     func globalSumPoint(team: Int) {
         if team == 1 {
@@ -80,8 +78,11 @@ class ScoreboardViewModel: ObservableObject {
                 self.shouldDismiss = true
             }
         } else if (globalPointA == globalPointB) && (globalPointA >= 6) {
-            print("tie break perro!")
-            // nueva pantalla donde se plantee el tie-break ??
+            let tieBreakGame = GameScore(team1: globalPointA, team2: globalPointB)
+            matchData.games.append(tieBreakGame)
+
+            clearData()
+            isTieBreak = true
         }
     }
     func restPoint() {

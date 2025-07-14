@@ -88,6 +88,7 @@
 				Utils/Components/PPButtons/PPButtonSlider.swift,
 				Utils/Components/PPButtons/PPCircleButton.swift,
 				Utils/Components/PPButtons/PPToggleOptions.swift,
+				Utils/Components/PPCountDownWatchOS.swift,
 				Utils/Components/PPProgressRingView.swift,
 				Utils/Components/PPResult.swift,
 				Utils/Components/PPResultsCardView.swift,
@@ -120,7 +121,7 @@
 		9DD7EEE22DBF7564002D78A7 /* PointWatch Watch App */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
 			explicitFileTypes = {
-				ConnectorMobile/WatchSessionManager.swift = sourcecode.swift;
+				Utils/ConnectorMobile/WatchSessionManager.swift = sourcecode.swift;
 			};
 			path = "PointWatch Watch App";
 			sourceTree = "<group>";

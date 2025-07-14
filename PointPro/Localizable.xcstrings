@@ -357,6 +357,17 @@
         }
       }
     },
+    "text.ready" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ready!"
+          }
+        }
+      }
+    },
     "text.receiving" : {
       "extractionState" : "manual",
       "localizations" : {

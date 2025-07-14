@@ -54,18 +54,27 @@ struct ScoreBoardView: View {
             }
             PointsButtons
         }.padding()
-            .onAppear(perform: {
-                vm.matchData = matchData
-            })
-            .onChange(of: vm.shouldDismiss) { newValue in
-                if newValue {
-                    vm.clearData()
-                    vm.resetPoints()
-                    vm.matchData = MatchData()
-                    dismiss()
+        .onAppear(perform: {
+            vm.matchData = matchData
+        })
+        .onChange(of: vm.shouldDismiss) { newValue in
+            if newValue {
+                vm.clearData()
+                vm.resetPoints()
+                vm.matchData = MatchData()
+                dismiss()
+                onDismiss()
+            }
+        }.navigationDestination(isPresented: $vm.isTieBreak) {
+            TieBreakView(matchData: vm.matchData ){
+                if matchData.pointType.numberOfGames == matchData.games.count {
+                    print("Partido finalizado: \(vm.matchData.finalScore)")
+                    vm.saveData()
                     onDismiss()
+                    vm.shouldDismiss = true
                 }
             }
+        }
     }
     
     @ViewBuilder
