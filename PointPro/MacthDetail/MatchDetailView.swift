@@ -72,9 +72,9 @@ struct MatchDetailView: View {
                                                teammates: "",
                                                date: Date(),
                                                location: "",
-                                               games: [(GameScore(team1: 6, team2: 0)),
-                                                       (GameScore(team1: 2, team2: 6)),
-                                                       (GameScore(team1: 6, team2: 5))],
+                                               games: [(GameScore(team1: 6, team2: 0, order: 0)),
+                                                       (GameScore(team1: 2, team2: 6, order: 1)),
+                                                       (GameScore(team1: 6, team2: 5, order: 2))],
                                                pointType: .bo3,
                                                isOpenSet: false ,
                                                position: .right)))

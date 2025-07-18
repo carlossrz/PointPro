@@ -68,6 +68,6 @@ struct PPScoreBoard: View {
 #Preview {
     PPScoreBoard(
         isOpenSet: false ,
-        globalPointsMatch: [GameScore(team1: 6, team2: 4),GameScore(team1: 2, team2: 6)],
+        globalPointsMatch: [GameScore(team1: 6, team2: 4, order: 0),GameScore(team1: 2, team2: 6, order: 1)],
         liveGameScores: [(1,0)])
 }

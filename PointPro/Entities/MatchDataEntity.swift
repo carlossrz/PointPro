@@ -89,11 +89,13 @@ class GameScore: Hashable {
     @Attribute(.unique) var id: UUID
     var team1: Int
     var team2: Int
+    var order: Int
     
-    init(team1: Int, team2: Int) {
+    init(team1: Int, team2: Int, order: Int) {
         self.id = UUID()
         self.team1 = team1
         self.team2 = team2
+        self.order = order
     }
 }
 
@@ -137,7 +139,9 @@ extension MatchDataCodable {
             teammates: teammates ?? "",
             date: date,
             location: location ?? "",
-            games: games.map { GameScore(team1: $0.team1, team2: $0.team2) },
+            games: games.enumerated().map { index, game in
+                GameScore(team1: game.team1, team2: game.team2, order: index)
+            },
             pointType: MatchFormat(rawValue: pointType) ?? .bo1,
             isOpenSet: isOpenSet,
             position: PlayerSide(rawValue: position) ?? .right

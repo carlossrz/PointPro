@@ -92,7 +92,10 @@ struct CreateMatchData: View {
                                 .frame(maxWidth: .infinity)
                             }.frame(height: 80)
                             PPButton(text: "text.addset") {
-                                let newGame = GameScore(team1: team1Score, team2: team2Score)
+                                let order = newMatch.games.count
+                                let newGame = GameScore(team1: team1Score,
+                                                        team2: team2Score,
+                                                        order: order)
                                 newMatch.games.append(newGame)
                                 team1Score = 0
                                 team2Score = 0

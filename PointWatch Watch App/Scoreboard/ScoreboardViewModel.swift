@@ -63,28 +63,32 @@ class ScoreboardViewModel: ObservableObject {
         } else {
             globalPointB += 1
         }
-        
+
         liveGameScores.removeLast()
         liveGameScores.append((globalPointA, globalPointB))
-        
+
         let difference = abs(globalPointA - globalPointB)
-        
+        let currentOrder = matchData.games.count
+
         if (globalPointA >= 6 || globalPointB >= 6) && difference >= 2 {
-            matchData.games.append(GameScore(team1: globalPointA, team2: globalPointB))
+            let newGame = GameScore(team1: globalPointA, team2: globalPointB, order: currentOrder)
+            matchData.games.append(newGame)
             clearData()
+
             if matchData.pointType.numberOfGames == matchData.games.count {
                 print("Partido finalizado")
                 saveData()
                 self.shouldDismiss = true
             }
         } else if (globalPointA == globalPointB) && (globalPointA >= 6) {
-            let tieBreakGame = GameScore(team1: globalPointA, team2: globalPointB)
+            let tieBreakGame = GameScore(team1: globalPointA, team2: globalPointB, order: currentOrder)
             matchData.games.append(tieBreakGame)
 
             clearData()
             isTieBreak = true
         }
     }
+
     func restPoint() {
         var currentPoints = (team == 1) ? pointA : pointB
         var currentIndex = pointsMatch.firstIndex(of: currentPoints) ?? 0
