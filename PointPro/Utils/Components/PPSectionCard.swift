@@ -21,7 +21,7 @@ struct PPSectionCard<Content: View>: View {
             content()
         }
         .padding()
-        .background(Color.white.opacity(0.9))
+        .background(Color(.lightGray).opacity(0.1))
         .cornerRadius(16)
         .shadow(color: .black.opacity(0.05), radius: 10, x: 0, y: 4)
     }

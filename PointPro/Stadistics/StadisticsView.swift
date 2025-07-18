@@ -18,7 +18,6 @@ struct StadisticsView: View {
     
     var body: some View {
         ZStack(alignment: .top) {
-            Color.gray.opacity(0.4).ignoresSafeArea()
             ScrollView(.vertical, showsIndicators: false) {
                 VStack(alignment: .leading,spacing:10) {
                     Text("text.stadistics".localizedValue)
@@ -28,6 +27,7 @@ struct StadisticsView: View {
                         VStack {
                             PPProgressRingView(progress: vm.winPercentage)
                                 .frame(height: 200)
+                                .padding(.bottom, 10)
 
                             HStack(spacing: 60) {
                                 VStack {
@@ -77,8 +77,6 @@ struct StadisticsView: View {
                             }
                         }.frame(maxWidth: .infinity)
                     }
-                
-                    
                 }.padding(.top,20)
                  .padding(.horizontal,15)
             }
