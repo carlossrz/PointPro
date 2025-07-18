@@ -9,6 +9,7 @@ import SwiftUI
 
 struct PPSectionCard<Content: View>: View {
     let title: String?
+    var color: Color = .white
     let content: () -> Content
 
     var body: some View {
@@ -21,7 +22,7 @@ struct PPSectionCard<Content: View>: View {
             content()
         }
         .padding()
-        .background(Color(.lightGray).opacity(0.1))
+        .background(color)
         .cornerRadius(16)
         .shadow(color: .black.opacity(0.05), radius: 10, x: 0, y: 4)
     }

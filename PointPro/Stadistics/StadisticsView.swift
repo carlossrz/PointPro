@@ -23,7 +23,8 @@ struct StadisticsView: View {
                     Text("text.stadistics".localizedValue)
                         .font(.system(size: 30, weight: .bold))
                         .foregroundStyle(.ppBlue)
-                    PPSectionCard(title: ""){
+                    PPSectionCard(title: "",
+                                  color: Color(.lightGray).opacity(0.1)){
                         VStack {
                             PPProgressRingView(progress: vm.winPercentage)
                                 .frame(height: 200)
@@ -53,24 +54,28 @@ struct StadisticsView: View {
                             }.frame(maxWidth: .infinity)
                         }.padding(.vertical)
                     }
-                    PPSectionCard(title: "text.performSide".localizedValue){
+                    PPSectionCard(title: "text.performSide".localizedValue,
+                                  color: Color(.lightGray).opacity(0.1)){
                         SidePerformanceChart(data: vm.sideStats)
                     }
                     
                     HStack(spacing: 20) {
-                        PPSectionCard(title: "text.winsOpening".localizedValue) {
+                        PPSectionCard(title: "text.winsOpening".localizedValue,
+                                      color: Color(.lightGray).opacity(0.1)){
                             PPProgressRingView(actual: vm.wonMatchesWhenOpening,
                                                total: vm.totalMatchesWhenOpening)
                             .frame(height: 130)
                         }
-                        PPSectionCard(title: "text.winsReceiving".localizedValue) {
+                        PPSectionCard(title: "text.winsReceiving".localizedValue,
+                                      color: Color(.lightGray).opacity(0.1)){
                             PPProgressRingView(actual: vm.wonMatchesWhenReceiving,
                                                total: vm.totalMatchesWhenReceiving)
                             .frame(height: 130)
                         }
                     }
                     
-                    PPSectionCard(title: "text.latestMatches".localizedValue) {
+                    PPSectionCard(title: "text.latestMatches".localizedValue,
+                                  color: Color(.lightGray).opacity(0.1)){
                         VStack(alignment: .leading, spacing: 10) {
                             ForEach(vm.lastThreeMatches, id: \.id) { match in
                                 PPMatchCell(matchData: match, cellType: .simple)
