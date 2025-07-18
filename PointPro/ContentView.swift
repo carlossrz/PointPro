@@ -17,7 +17,7 @@ struct ContentView: View {
             MatchListView()
                 .tabItem {
                     Image(systemName: "house.fill")
-                    Text("text.matchlist")
+                    Text("text.matchList")
                 }
             StadisticsView()
                 .tabItem {
