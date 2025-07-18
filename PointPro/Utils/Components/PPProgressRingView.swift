@@ -12,9 +12,6 @@ struct PPProgressRingView: View {
     var actual: Int? = nil
     var total: Int? = nil
     
-    
-    var size: CGFloat = 200
-    
     private var computedProgress: Double {
         if let progress = progress {
             return min(max(progress, 0), 1)
@@ -25,9 +22,6 @@ struct PPProgressRingView: View {
         return 0
     }
     
-
-    // - Si `progress` está definido y `actual`/`total` no, mostramos %.
-    // - Si `actual` y `total` están definidos, mostramos fracción `actual/total`.
     private var progressText: String {
         if let progress = progress, (actual == nil || total == nil) {
             let percent = Int(min(max(progress, 0), 1) * 100)
@@ -42,25 +36,29 @@ struct PPProgressRingView: View {
     var body: some View {
         ZStack {
             Circle()
-                .stroke(Color.ppBlue.opacity(0.5), lineWidth: size * 0.04)
-            
+                .stroke(Color.ppBlue.opacity(0.5), lineWidth: 8)
+
             Circle()
                 .trim(from: 0, to: computedProgress)
                 .stroke(
                     Color.ppGreenBall,
-                    style: StrokeStyle(lineWidth: size * 0.04, lineCap: .round)
+                    style: StrokeStyle(lineWidth: 8, lineCap: .round)
                 )
                 .rotationEffect(.degrees(-90))
                 .animation(.easeOut(duration: 0.8), value: computedProgress)
-            
+
             Text(progressText)
-                .font(.system(size: size * 0.15, weight: .bold, design: .rounded))
+                .font(.system(size:30, weight: .bold, design: .rounded))
                 .foregroundColor(.ppBlue)
         }
-        .frame(width: size, height: size)
+        .aspectRatio(1, contentMode: .fit)
+        .frame(maxWidth: .infinity)
     }
 }
 
+
 #Preview {
     PPProgressRingView()
+        .frame(height: 120)
+
 }

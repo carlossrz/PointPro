@@ -27,6 +27,8 @@ struct StadisticsView: View {
                     PPSectionCard(title: ""){
                         VStack {
                             PPProgressRingView(progress: vm.winPercentage)
+                                .frame(height: 200)
+
                             HStack(spacing: 60) {
                                 VStack {
                                     Text("\(vm.wonMatches)")
@@ -58,17 +60,13 @@ struct StadisticsView: View {
                     HStack(spacing: 20) {
                         PPSectionCard(title: "text.winsOpening".localizedValue) {
                             PPProgressRingView(actual: vm.wonMatchesWhenOpening,
-                                               total: vm.totalMatchesWhenOpening,
-                                               size: 120)
-                            .padding(.horizontal)
+                                               total: vm.totalMatchesWhenOpening)
+                            .frame(height: 130)
                         }
-                        
                         PPSectionCard(title: "text.winsReceiving".localizedValue) {
                             PPProgressRingView(actual: vm.wonMatchesWhenReceiving,
-                                               total: vm.totalMatchesWhenReceiving,
-                                               size: 120)
-                            .padding(.horizontal)
-                            
+                                               total: vm.totalMatchesWhenReceiving)
+                            .frame(height: 130)
                         }
                     }
                     
@@ -77,12 +75,12 @@ struct StadisticsView: View {
                             ForEach(vm.lastThreeMatches, id: \.id) { match in
                                 PPMatchCell(matchData: match, cellType: .simple)
                             }
-                        }
-                        
+                        }.frame(maxWidth: .infinity)
                     }
+                
                     
                 }.padding(.top,20)
-                    .padding(.horizontal)
+                 .padding(.horizontal,15)
             }
         }
         .onAppear {
