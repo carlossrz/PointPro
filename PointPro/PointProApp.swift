@@ -48,6 +48,7 @@ struct PointProApp: App {
                     // Configure CRUD service early with the main context
                     CRUDDataService.shared.configure(sharedModelContainer.mainContext)
                 }
+                .accentColor(SettingsService.shared.accentColor)
         }
         .modelContainer(sharedModelContainer)
     }
