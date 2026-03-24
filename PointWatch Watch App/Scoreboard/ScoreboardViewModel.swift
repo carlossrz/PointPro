@@ -1,6 +1,9 @@
 import Foundation
+import os
 
 class ScoreboardViewModel: ObservableObject {
+    private let logger = Logger(subsystem: "com.pointpro.watch", category: "ScoreboardViewModel")
+
     @Published var team: Int = 1
     
     @Published var pointA: String = "0"
@@ -76,7 +79,7 @@ class ScoreboardViewModel: ObservableObject {
             clearData()
 
             if matchData.pointType.numberOfGames == matchData.games.count {
-                print("Partido finalizado")
+                logger.info("Partido finalizado")
                 saveData()
                 self.shouldDismiss = true
             }
@@ -105,7 +108,9 @@ class ScoreboardViewModel: ObservableObject {
     }
     
     func clearData() {
-        liveGameScores.removeLast()
+        if !liveGameScores.isEmpty {
+            liveGameScores.removeLast()
+        }
         liveGameScores = [(0,0)]
         globalPointA = 0
         globalPointB = 0
@@ -117,7 +122,27 @@ class ScoreboardViewModel: ObservableObject {
         pointB = "0"
     }
     
+    private func appendPartialGameIfNeeded() {
+        // If there's an ongoing game with non-zero score, append it so partial results are saved
+        let currentA = globalPointA
+        let currentB = globalPointB
+        guard currentA != 0 || currentB != 0 else { return }
+
+        // If last game already matches current partial score, don't duplicate
+        if let last = matchData.games.last {
+            if last.team1 == currentA && last.team2 == currentB {
+                return
+            }
+        }
+
+        let newGame = GameScore(team1: currentA, team2: currentB, order: matchData.games.count)
+        matchData.games.append(newGame)
+    }
+
     func saveData() {
+        // Ensure partial current game is recorded before sending
+        appendPartialGameIfNeeded()
+
         #if targetEnvironment(simulator)
                     sessionManager.sendMessageMatchResult(match:matchData)
         #else

@@ -23,6 +23,17 @@ struct StadisticsView: View {
                     Text("text.stadistics".localizedValue)
                         .font(.system(size: 30, weight: .bold))
                         .foregroundStyle(.ppBlue)
+
+                    // Small 4-card panel
+                    HStack(spacing: 12) {
+                        SmallStatCard(title: "Partidos", value: "\(vm.totalMatches)")
+                        SmallStatCard(title: "Sets/match", value: String(format: "%.1f", vm.averageSetsPerMatch))
+                        SmallStatCard(title: "Tie-break %", value: "\(Int(vm.tieBreakFrequency * 100))%")
+                        SmallStatCard(title: "Racha", value: "\(vm.currentWinStreak)")
+                    }
+                    .frame(maxWidth: .infinity)
+                    .padding(.vertical, 4)
+
                     PPSectionCard(title: "",
                                   color: Color(.lightGray).opacity(0.1)){
                         VStack {
@@ -97,9 +108,24 @@ struct StadisticsView: View {
     StadisticsView()
 }
 
+// Small card view used by StadisticsView
+fileprivate struct SmallStatCard: View {
+    let title: String
+    let value: String
 
-
-
-
-
-
+    var body: some View {
+        VStack(alignment: .leading, spacing: 6) {
+            Text(value)
+                .font(.system(size: 20, weight: .bold, design: .rounded))
+                .foregroundStyle(.ppBlue)
+            Text(title)
+                .font(.system(size: 10, weight: .bold))
+                .foregroundColor(.secondary)
+        }
+        .padding(12)
+        .frame(maxWidth: .infinity, minHeight: 64)
+        .background(Color(.systemBackground).opacity(0.9))
+        .cornerRadius(12)
+        .shadow(color: Color.black.opacity(0.06), radius: 6, x: 0, y: 2)
+    }
+}

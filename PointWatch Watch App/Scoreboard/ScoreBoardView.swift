@@ -6,8 +6,10 @@
 //
 
 import SwiftUI
+import os
 
 struct ScoreBoardView: View {
+    private let logger = Logger(subsystem: "com.pointpro.watch", category: "ScoreBoardView")
     @Environment(\.dismiss) var dismiss
     @StateObject var vm = ScoreboardViewModel()
     
@@ -17,7 +19,7 @@ struct ScoreBoardView: View {
     var body: some View {
         ZStack {
             TabView {
-                ScoreBoardView
+                scoreboardContent
                 SettingsView
             }.tabViewStyle(.carousel)
                 .toolbar{
@@ -36,14 +38,18 @@ struct ScoreBoardView: View {
     @ViewBuilder
     var SettingsView: some View {
         PPButton(text: "finish.match",color:.ppGreenBall){
+            // Give immediate haptic feedback on the Watch
+            WKInterfaceDevice.current().play(.success)
+            // Send match data to phone/watch connectivity
             vm.saveData()
+            // Dismiss view and mark as finished
             onDismiss()
             vm.shouldDismiss = true
         }.padding(.horizontal)
     }
     
     @ViewBuilder
-    var ScoreBoardView: some View {
+    var scoreboardContent: some View {
         VStack(spacing:20){
             HStack{
                 PPScoreBoard(isOpenSet: vm.matchData.isOpenSet,
@@ -57,7 +63,7 @@ struct ScoreBoardView: View {
         .onAppear(perform: {
             vm.matchData = matchData
         })
-        .onChange(of: vm.shouldDismiss) { newValue in
+        .onChange(of: vm.shouldDismiss) { _, newValue in
             if newValue {
                 vm.clearData()
                 vm.resetPoints()
@@ -68,7 +74,7 @@ struct ScoreBoardView: View {
         }.navigationDestination(isPresented: $vm.isTieBreak) {
             TieBreakView(matchData: vm.matchData ){
                 if matchData.pointType.numberOfGames == matchData.games.count {
-                    print("Partido finalizado: \(vm.matchData.finalScore)")
+                    logger.info("Partido finalizado: \(vm.matchData.finalScore)")
                     vm.saveData()
                     onDismiss()
                     vm.shouldDismiss = true

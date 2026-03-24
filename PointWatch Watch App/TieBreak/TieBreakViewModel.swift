@@ -6,8 +6,11 @@
 //
 
 import Foundation
+import os
 
 class TieBreakViewModel: ObservableObject {
+    private let logger = Logger(subsystem: "com.pointpro.watch", category: "TieBreakViewModel")
+
     @Published var team: Int = 1
     
     @Published var tieBreakPointsA: Int = 0
@@ -35,31 +38,33 @@ class TieBreakViewModel: ObservableObject {
     private func checkTieBreakWinner() {
         let diff = abs(tieBreakPointsA - tieBreakPointsB)
         
-        if tieBreakPointsA >= 7 && diff >= 2 {
-            endTieBreak(winner: 1)
-        } else if tieBreakPointsB >= 7 && diff >= 2 {
-            endTieBreak(winner: 2)
-        }
-    }
-    
-    private func endTieBreak(winner: Int) {
-        guard let lastGame = matchData.games.last else {
-            print("❌ No hay juego previo para actualizar el tie-break")
+        if matchData.games.isEmpty {
+            logger.warning("No hay juego previo para actualizar el tie-break")
             return
         }
         
-        if winner == 1 {
-            lastGame.team1 += 1
-        } else {
-            lastGame.team2 += 1
+        if (tieBreakPointsA >= 7 || tieBreakPointsB >= 7) && diff >= 2 {
+            // If there's an existing placeholder tie-break game (e.g., 6-6), update it; otherwise append the final result
+            if let last = matchData.games.last {
+                if last.team1 == last.team2 && last.team1 >= 6 {
+                    // Update the existing game in-place (GameScore is a class-model)
+                    last.team1 = tieBreakPointsA
+                    last.team2 = tieBreakPointsB
+                    logger.debug("Updated existing tie-break game to \(self.tieBreakPointsA)-\(self.tieBreakPointsB)")
+                } else {
+                    // No placeholder, append as a new game
+                    let finalGame = GameScore(team1: tieBreakPointsA, team2: tieBreakPointsB, order: matchData.games.count)
+                    matchData.games.append(finalGame)
+                    logger.debug("Appended final tie-break game \(self.tieBreakPointsA)-\(self.tieBreakPointsB)")
+                }
+            } else {
+                // Fallback: append
+                let finalGame = GameScore(team1: tieBreakPointsA, team2: tieBreakPointsB, order: matchData.games.count)
+                matchData.games.append(finalGame)
+                logger.debug("Appended final tie-break game (fallback) \(self.tieBreakPointsA)-\(self.tieBreakPointsB)")
+            }
+            
+            shouldDismiss = true
         }
-
-        tieBreakPointsA = 0
-        tieBreakPointsB = 0
-        isTieBreak = false
-        shouldDismiss = true
-        
     }
-    
 }
-

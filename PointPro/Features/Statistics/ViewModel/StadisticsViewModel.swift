@@ -20,6 +20,38 @@ final class StatisticsViewModel: ObservableObject {
         matches.count
     }
     
+    // Average sets per match
+    var averageSetsPerMatch: Double {
+        guard !matches.isEmpty else { return 0 }
+        let totalSets = matches.reduce(0) { $0 + $1.games.count }
+        return Double(totalSets) / Double(matches.count)
+    }
+    
+    // Tie-break frequency (heuristic)
+    var tieBreakMatchesCount: Int {
+        matches.filter { match in
+            match.games.contains { game in
+                // heuristic: a tie-break-like game where both reached >=6 and possibly equal at entry
+                (game.team1 >= 6 || game.team2 >= 6) && (abs(game.team1 - game.team2) <= 2)
+            }
+        }.count
+    }
+    
+    var tieBreakFrequency: Double {
+        guard !matches.isEmpty else { return 0 }
+        return Double(tieBreakMatchesCount) / Double(matches.count)
+    }
+    
+    // Current win streak (newest matches first)
+    var currentWinStreak: Int {
+        let sorted = matches.sorted { $0.date > $1.date }
+        var streak = 0
+        for m in sorted {
+            if m.isWinner { streak += 1 } else { break }
+        }
+        return streak
+    }
+    
     var wonMatches: Int {
         matches.filter { $0.isWinner }.count
     }

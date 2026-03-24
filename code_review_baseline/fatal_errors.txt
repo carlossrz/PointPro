@@ -1,0 +1,2 @@
+./PointPro/PointProApp.swift:30:                fatalError("❌ Preview failed to load container: \(error)")
+./PointPro/PointProApp.swift:38:            fatalError("❌ Failed to load main container: \(error)")

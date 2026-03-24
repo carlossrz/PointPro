@@ -44,6 +44,11 @@ struct PPCountDown: View {
                     .onAppear {
                         startCountdown()
                     }
+                    .onDisappear {
+                        timer?.invalidate()
+                        timer = nil
+                        started = false
+                    }
             } else {
                 Text("text.ready".localizedValue)
                     .font(.system(size: 25))

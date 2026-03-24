@@ -42,8 +42,12 @@ struct PointProApp: App {
     var body: some Scene {
         WindowGroup {
             ContentView()
+                .environmentObject(AppState.shared)
+                .task {
+                    // Configure CRUD service early with the main context
+                    CRUDDataService.shared.configure(sharedModelContainer.mainContext)
+                }
         }
         .modelContainer(sharedModelContainer)
     }
 }
-

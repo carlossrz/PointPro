@@ -125,17 +125,24 @@ extension MatchData {
             date: date,
             location: location,
             games: games.map { GameScoreCodable(team1: $0.team1, team2: $0.team2) },
-            pointType: "\(pointType)",
+            pointType: pointType.rawValue,
             isOpenSet: isOpenSet,
-            position: "\(position)"
+            position: position.rawValue
         )
     }
 }
 
 extension MatchDataCodable {
     func asMatchData() -> MatchData {
+        // Safe UUID parsing: avoid force-unwrapping an invalid UUID
+        guard let uuid = UUID(uuidString: id) else {
+            // If UUID invalid, return a default MatchData with a new id and log the issue via assertion
+            assertionFailure("Invalid UUID string in MatchDataCodable: \(id)")
+            return MatchData()
+        }
+
         return MatchData(
-            id: UUID(uuidString: id)!,
+            id: uuid,
             teammates: teammates ?? "",
             date: date,
             location: location ?? "",

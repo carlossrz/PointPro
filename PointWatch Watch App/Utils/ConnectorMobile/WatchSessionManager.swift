@@ -7,10 +7,12 @@
 
 import Foundation
 import WatchConnectivity
+import os
 
 class WatchSessionManager: NSObject, WCSessionDelegate {
     
     static let shared = WatchSessionManager()
+    private let logger = Logger(subsystem: "com.pointpro.watch", category: "WatchSessionManager")
     
     override init() {
         super.init()
@@ -22,16 +24,16 @@ class WatchSessionManager: NSObject, WCSessionDelegate {
 
     func session(_ session: WCSession, activationDidCompleteWith activationState: WCSessionActivationState, error: (any Error)?) {
         if let error = error {
-            print("❌ Activación fallida: \(error.localizedDescription)")
+            logger.error("Activación fallida: \(error.localizedDescription, privacy: .public)")
         } else {
-            print("✅ Sesión activada con estado: \(activationState.rawValue)")
+            logger.info("Sesión activada con estado: \(activationState.rawValue)")
         }
     }
 
     //Envio en tiempo real
     func sendMessageMatchResult(match: MatchData) {
-        print("➡️ Intentando enviar match con sendMessage")
-        
+        logger.debug("Intentando enviar match con sendMessage")
+
         let encoder = JSONEncoder()
         encoder.dateEncodingStrategy = .iso8601
         do {
@@ -39,31 +41,26 @@ class WatchSessionManager: NSObject, WCSessionDelegate {
             let message: [String: Any] = ["matchData": data]
 
             if WCSession.default.isReachable {
-                print("iPhone alcanzable. Enviando datos...")
+                logger.info("iPhone alcanzable. Enviando datos...")
                 WCSession.default.sendMessage(message, replyHandler: nil) { error in
-                    print("❌ Error en sendMessage:", error)
+                    self.logger.error("Error en sendMessage: \(error.localizedDescription, privacy: .public)")
                 }
             } else {
-                print("⚠️ iPhone no está alcanzable. No se pudo enviar el mensaje.")
+                logger.warning("iPhone no está alcanzable. No se pudo enviar el mensaje.")
             }
 
         } catch {
-            print("❌ Error codificando MatchData:", error)
+            logger.error("Error codificando MatchData: \(error.localizedDescription, privacy: .public)")
         }
     }
 
     //Envio en background
     func sendMatchResult(match: MatchData) {
         let session = WCSession.default
-        print("➡️ Intentando enviar match con transferUserInfo")
+        logger.debug("Intentando enviar match con transferUserInfo")
 
         guard session.activationState == .activated else {
-            print("❌ Sesión no activada en Watch")
-            return
-        }
-
-        guard session.isCompanionAppInstalled else {
-            print("❌ La app del iPhone no está instalada")
+            logger.error("Sesión no activada en Watch")
             return
         }
 
@@ -71,21 +68,11 @@ class WatchSessionManager: NSObject, WCSessionDelegate {
         encoder.dateEncodingStrategy = .iso8601
         do {
             let data = try encoder.encode(match.asCodable())
-            let info: [String: Any] = [
-                "matchData": data,
-                "timestamp": Date().timeIntervalSince1970
-            ]
-            WCSession.default.transferUserInfo(info)
+            session.transferUserInfo(["matchData": data])
+            logger.info("Match transferUserInfo encolado")
         } catch {
-            print("❌ Error codificando MatchData:", error)
+            logger.error("Error codificando MatchData para transferUserInfo: \(error.localizedDescription, privacy: .public)")
         }
     }
 
-    func session(_ session: WCSession, didFinish userInfoTransfer: WCSessionUserInfoTransfer, error: Error?) {
-        if let error = error {
-            print("❌ Transferencia fallida: \(error.localizedDescription)")
-        } else {
-            print("✅ Datos enviados exitosamente desde el Watch.")
-        }
-    }
 }

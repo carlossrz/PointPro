@@ -30,7 +30,7 @@ struct TieBreakView: View {
         }
         .backgroundGrid(backgroundVersion: .watchOS)
         .navigationBarBackButtonHidden(true)
-        .onChange(of: vm.shouldDismiss) { newValue in
+        .onChange(of: vm.shouldDismiss) { _, newValue in
             if newValue {
                 dismiss()
                 onDismiss()
@@ -76,4 +76,3 @@ struct TieBreakView: View {
 #Preview {
     TieBreakView(matchData: MatchData()){}
 }
-

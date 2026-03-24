@@ -1,0 +1,8 @@
+./PointPro/Features/CreateMatchData/View/CreateMatchData.swift:11:    @Environment(\.modelContext) var context
+./PointPro/Features/MatchList/View/MatchListView.swift:13:    @Environment(\.modelContext) private var context
+./PointPro/Data/Services/CRUDDataService.swift:14:    var modelContext: ModelContext?
+./PointPro/Data/Services/CRUDDataService.swift:17:        self.modelContext = ctx
+./PointPro/Data/Services/CRUDDataService.swift:21:        guard let ctx = modelContext else { return }
+./PointPro/Data/Services/CRUDDataService.swift:27:        guard let ctx = modelContext else { return }
+./PointPro/ContentView.swift:12:    @Environment(\.modelContext) private var modelContext
+./PointPro/ContentView.swift:34:            CRUDDataService.shared.configure(modelContext)  

@@ -1,0 +1,43 @@
+./code_review_baseline/task_detached.txt:1:./PointPro/Shared/Utils/PhoneSessionManager.swift:44:            Task {
+./code_review_baseline/prints.txt:1:./PointPro/Shared/Utils/PhoneSessionManager.swift:16:        print("📱 PhoneSessionManager inicializado")
+./code_review_baseline/prints.txt:2:./PointPro/Shared/Utils/PhoneSessionManager.swift:34:            print("❌ No se encontró matchData en el diccionario")
+./code_review_baseline/prints.txt:3:./PointPro/Shared/Utils/PhoneSessionManager.swift:43:            print("✅ Match recibido correctamente: \(match)")
+./code_review_baseline/prints.txt:4:./PointPro/Shared/Utils/PhoneSessionManager.swift:48:            print("❌ Error decodificando MatchData: \(error)")
+./code_review_baseline/prints.txt:5:./PointPro/Shared/Utils/PhoneSessionManager.swift:54:            print("❌ Error al activar sesión: \(error.localizedDescription)")
+./code_review_baseline/prints.txt:6:./PointPro/Shared/Utils/PhoneSessionManager.swift:56:            print("✅ Sesión activada en iPhone.")
+./code_review_baseline/prints.txt:7:./PointPro/Shared/Utils/PhoneSessionManager.swift:61:        print("ℹ️ Sesión WCSession inactiva temporalmente")
+./code_review_baseline/prints.txt:8:./PointPro/Shared/Utils/PhoneSessionManager.swift:65:        print("🔄 Sesión desactivada, reactivando...")
+./code_review_baseline/prints.txt:11:./PointWatch Watch App/Utils/ConnectorMobile/WatchSessionManager.swift:33:        print("➡️ Intentando enviar match con sendMessage")
+./code_review_baseline/prints.txt:13:./PointWatch Watch App/Utils/ConnectorMobile/WatchSessionManager.swift:44:                    print("❌ Error en sendMessage:", error)
+./code_review_baseline/prints.txt:16:./PointWatch Watch App/Utils/ConnectorMobile/WatchSessionManager.swift:58:        print("➡️ Intentando enviar match con transferUserInfo")
+./PointPro/Shared/Utils/PhoneSessionManager.swift:9:import WatchConnectivity
+./PointPro/Shared/Utils/PhoneSessionManager.swift:11:class PhoneSessionManager: NSObject, WCSessionDelegate {
+./PointPro/Shared/Utils/PhoneSessionManager.swift:12:    static let shared = PhoneSessionManager()
+./PointPro/Shared/Utils/PhoneSessionManager.swift:16:        print("📱 PhoneSessionManager inicializado")
+./PointPro/Shared/Utils/PhoneSessionManager.swift:17:        if WCSession.isSupported() {
+./PointPro/Shared/Utils/PhoneSessionManager.swift:18:            WCSession.default.delegate = self
+./PointPro/Shared/Utils/PhoneSessionManager.swift:19:            WCSession.default.activate()
+./PointPro/Shared/Utils/PhoneSessionManager.swift:23:    func session(_ session: WCSession, didReceiveMessage message: [String : Any]) {
+./PointPro/Shared/Utils/PhoneSessionManager.swift:27:    func session(_ session: WCSession, didReceiveUserInfo userInfo: [String : Any]) {
+./PointPro/Shared/Utils/PhoneSessionManager.swift:52:    func session(_ session: WCSession, activationDidCompleteWith activationState: WCSessionActivationState, error: Error?) {
+./PointPro/Shared/Utils/PhoneSessionManager.swift:60:    func sessionDidBecomeInactive(_ session: WCSession) {
+./PointPro/Shared/Utils/PhoneSessionManager.swift:61:        print("ℹ️ Sesión WCSession inactiva temporalmente")
+./PointPro/Shared/Utils/PhoneSessionManager.swift:64:    func sessionDidDeactivate(_ session: WCSession) {
+./PointPro/Shared/Utils/PhoneSessionManager.swift:66:        WCSession.default.activate()
+./PointPro/AppDelegate.swift:14:        PhoneSessionManager.shared  // Activa WCSession al iniciar la app (WacthConectivity)
+./PointWatch Watch App/Utils/ConnectorMobile/WatchSessionManager.swift:9:import WatchConnectivity
+./PointWatch Watch App/Utils/ConnectorMobile/WatchSessionManager.swift:11:class WatchSessionManager: NSObject, WCSessionDelegate {
+./PointWatch Watch App/Utils/ConnectorMobile/WatchSessionManager.swift:17:        if WCSession.isSupported() {
+./PointWatch Watch App/Utils/ConnectorMobile/WatchSessionManager.swift:18:            WCSession.default.delegate = self
+./PointWatch Watch App/Utils/ConnectorMobile/WatchSessionManager.swift:19:            WCSession.default.activate()
+./PointWatch Watch App/Utils/ConnectorMobile/WatchSessionManager.swift:23:    func session(_ session: WCSession, activationDidCompleteWith activationState: WCSessionActivationState, error: (any Error)?) {
+./PointWatch Watch App/Utils/ConnectorMobile/WatchSessionManager.swift:32:    func sendMessageMatchResult(match: MatchData) {
+./PointWatch Watch App/Utils/ConnectorMobile/WatchSessionManager.swift:33:        print("➡️ Intentando enviar match con sendMessage")
+./PointWatch Watch App/Utils/ConnectorMobile/WatchSessionManager.swift:41:            if WCSession.default.isReachable {
+./PointWatch Watch App/Utils/ConnectorMobile/WatchSessionManager.swift:43:                WCSession.default.sendMessage(message, replyHandler: nil) { error in
+./PointWatch Watch App/Utils/ConnectorMobile/WatchSessionManager.swift:44:                    print("❌ Error en sendMessage:", error)
+./PointWatch Watch App/Utils/ConnectorMobile/WatchSessionManager.swift:57:        let session = WCSession.default
+./PointWatch Watch App/Utils/ConnectorMobile/WatchSessionManager.swift:58:        print("➡️ Intentando enviar match con transferUserInfo")
+./PointWatch Watch App/Utils/ConnectorMobile/WatchSessionManager.swift:78:            WCSession.default.transferUserInfo(info)
+./PointWatch Watch App/Utils/ConnectorMobile/WatchSessionManager.swift:84:    func session(_ session: WCSession, didFinish userInfoTransfer: WCSessionUserInfoTransfer, error: Error?) {
+./PointWatch Watch App/Scoreboard/ScoreboardViewModel.swift:122:                    sessionManager.sendMessageMatchResult(match:matchData)
