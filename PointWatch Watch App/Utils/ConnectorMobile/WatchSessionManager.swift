@@ -22,7 +22,7 @@ class WatchSessionManager: NSObject, WCSessionDelegate {
         }
     }
 
-    func session(_ session: WCSession, activationDidCompleteWith activationState: WCSessionActivationState, error: (any Error)?) {
+    func session(_ session: WCSession, activationDidCompleteWith activationState: WCSessionActivationState, error: Error?) {
         if let error = error {
             logger.error("Activación fallida: \(error.localizedDescription, privacy: .public)")
         } else {
@@ -72,6 +72,77 @@ class WatchSessionManager: NSObject, WCSessionDelegate {
             logger.info("Match transferUserInfo encolado")
         } catch {
             logger.error("Error codificando MatchData para transferUserInfo: \(error.localizedDescription, privacy: .public)")
+        }
+    }
+
+    func session(_ session: WCSession, didReceiveMessage message: [String : Any]) {
+        // Check if it's settings payload
+        if let settingsDict = message["settings"] as? [String: Any] {
+            // Update watch local settings on main actor
+            Task {
+                await MainActor.run {
+                    if let format = settingsDict["defaultMatchFormat"] as? String {
+                        WatchSettingsService.shared.defaultMatchFormatRaw = format
+                    }
+                    if let pos = settingsDict["defaultPosition"] as? String {
+                        WatchSettingsService.shared.defaultPositionRaw = pos
+                    }
+                    if let accent = settingsDict["accentColor"] as? String {
+                        WatchSettingsService.shared.accentColorName = accent
+                    }
+                }
+            }
+            logger.info("Settings received from iPhone and stored on Watch")
+            return
+        }
+
+        // existing matchData handling could go here if used on watch, but Watch side primarily sends
+    }
+
+    func session(_ session: WCSession, didReceiveMessage message: [String : Any], replyHandler: @escaping ([String : Any]) -> Void) {
+        // Also implement message receipt with reply handler
+        if let settingsDict = message["settings"] as? [String: Any] {
+            // Update watch local settings on main actor
+            Task {
+                await MainActor.run {
+                    if let format = settingsDict["defaultMatchFormat"] as? String {
+                        WatchSettingsService.shared.defaultMatchFormatRaw = format
+                    }
+                    if let pos = settingsDict["defaultPosition"] as? String {
+                        WatchSettingsService.shared.defaultPositionRaw = pos
+                    }
+                    if let accent = settingsDict["accentColor"] as? String {
+                        WatchSettingsService.shared.accentColorName = accent
+                    }
+                }
+            }
+            logger.info("Settings received from iPhone (replyHandler) and stored on Watch")
+            replyHandler(["status": "ok"])
+            return
+        }
+
+        // Default reply
+        replyHandler([:])
+    }
+
+    func session(_ session: WCSession, didReceiveUserInfo userInfo: [String : Any]) {
+        // Also handle background userInfo deliveries for settings
+        if let settingsDict = userInfo["settings"] as? [String: Any] {
+            Task {
+                await MainActor.run {
+                    if let format = settingsDict["defaultMatchFormat"] as? String {
+                        WatchSettingsService.shared.defaultMatchFormatRaw = format
+                    }
+                    if let pos = settingsDict["defaultPosition"] as? String {
+                        WatchSettingsService.shared.defaultPositionRaw = pos
+                    }
+                    if let accent = settingsDict["accentColor"] as? String {
+                        WatchSettingsService.shared.accentColorName = accent
+                    }
+                }
+            }
+            logger.info("Settings received via userInfo and stored on Watch")
+            return
         }
     }
 

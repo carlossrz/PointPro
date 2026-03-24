@@ -7,29 +7,35 @@ struct SettingsView: View {
         NavigationStack {
             Form {
                 Section(header: Text("General")) {
-                    Toggle("Enviar automáticamente al terminar", isOn: $settings.autoSendOnFinish)
-                    Toggle("Guardar parcial al terminar", isOn: $settings.savePartialOnFinish)
-                    Toggle("Vibración al finalizar (Watch)", isOn: $settings.hapticOnFinish)
                     Toggle("Notificaciones locales", isOn: $settings.enableNotifications)
+                        .onChange(of: settings.enableNotifications) { _ in settings.syncToWatch() }
                 }
 
                 Section(header: Text("Formato por defecto")) {
                     Picker("Formato", selection: $settings.defaultMatchFormatRaw) {
-                        ForEach(["Best of One","Best of Three","Best of Five"], id: \.
-                                self) { format in
+                        ForEach(["Best of One", "Best of Three", "Best of Five"], id: \.self) { format in
                             Text(format).tag(format)
                         }
                     }
                     .pickerStyle(.segmented)
+                    .onChange(of: settings.defaultMatchFormatRaw) { _ in settings.syncToWatch() }
+                    
+                    Picker("Posición", selection: $settings.defaultPositionRaw) {
+                        ForEach(["left", "right"], id: \.self) { pos in
+                            Text(pos.capitalized).tag(pos)
+                        }
+                    }
+                    .pickerStyle(.segmented)
+                    .onChange(of: settings.defaultPositionRaw) { _ in settings.syncToWatch() }
                 }
 
                 Section(header: Text("Color de acento")) {
                     ScrollView(.horizontal, showsIndicators: false) {
                         HStack(spacing: 12) {
-                            ForEach(settings.accentOptions, id: \.
-                                    self) { name in
+                            ForEach(settings.accentOptions, id: \.self) { name in
                                 Button {
                                     settings.accentColorName = name
+                                    settings.syncToWatch()
                                 } label: {
                                     ZStack {
                                         Color(name)
@@ -42,10 +48,13 @@ struct SettingsView: View {
                                         }
                                     }
                                 }
+                                .buttonStyle(.plain)
                             }
                         }.padding(.vertical, 6)
                     }
                 }
+
+                
 
                 Section {
                     Button(role: .destructive) {
@@ -56,6 +65,7 @@ struct SettingsView: View {
                         settings.enableNotifications = true
                         settings.defaultMatchFormatRaw = "Best of One"
                         settings.accentColorName = "PPBlue"
+                        settings.syncToWatch()
                     } label: {
                         Text("Restablecer valores por defecto")
                     }

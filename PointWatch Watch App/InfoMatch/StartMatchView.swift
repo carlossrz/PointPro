@@ -12,11 +12,12 @@ struct StartMatchView: View {
     @State var isStart: Bool = false
     @State var shouldNavigate = false
     @State var matchData = MatchData()
+    @ObservedObject private var settings = WatchSettingsService.shared
     
     @State private var expanded = false
-    
+
     let screenSize = WKInterfaceDevice.current().screenBounds.size
-    
+
     var body: some View {
         ZStack {
             if isStart {
@@ -49,6 +50,17 @@ struct StartMatchView: View {
         }
         .frame(width: screenSize.width, height: screenSize.height)
         .ignoresSafeArea()
+        .onAppear {
+            // Initialize defaults from WatchSettingsService
+            matchData.position = WatchSettingsService.shared.defaultPosition
+            matchData.pointType = WatchSettingsService.shared.defaultMatchFormat
+        }
+        .onChange(of: settings.defaultPositionRaw) { _, newValue in
+            matchData.position = settings.defaultPosition
+        }
+        .onChange(of: settings.defaultMatchFormatRaw) { _, newValue in
+            matchData.pointType = settings.defaultMatchFormat
+        }
     }
     
     @ViewBuilder

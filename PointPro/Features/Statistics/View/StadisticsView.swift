@@ -28,7 +28,7 @@ struct StadisticsView: View {
                     HStack(spacing: 12) {
                         SmallStatCard(title: "Partidos", value: "\(vm.totalMatches)")
                         SmallStatCard(title: "Sets/match", value: String(format: "%.1f", vm.averageSetsPerMatch))
-                        SmallStatCard(title: "Tie-break %", value: "\(Int(vm.tieBreakFrequency * 100))%")
+                        SmallStatCard(title: "Tie-break", value: "\(Int(vm.tieBreakFrequency * 100))%")
                         SmallStatCard(title: "Racha", value: "\(vm.currentWinStreak)")
                     }
                     .frame(maxWidth: .infinity)
