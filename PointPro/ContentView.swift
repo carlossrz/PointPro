@@ -1,4 +1,4 @@
- //
+//
 //  ContentView.swift
 //  PointPro
 //
@@ -26,7 +26,7 @@ struct ContentView: View {
                     Image(systemName: "chart.bar.xaxis")
                     Text("text.stadistics")
                 }
-            Text("Settings  1.Changes color 2.Nuevas pistas")
+            SettingsView()
                 .tabItem {
                     Image(systemName: "gear")
                     Text("text.settings")

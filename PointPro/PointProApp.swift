@@ -43,6 +43,7 @@ struct PointProApp: App {
         WindowGroup {
             ContentView()
                 .environmentObject(AppState.shared)
+                .environmentObject(SettingsService.shared)
                 .task {
                     // Configure CRUD service early with the main context
                     CRUDDataService.shared.configure(sharedModelContainer.mainContext)
