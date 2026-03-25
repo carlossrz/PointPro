@@ -49,9 +49,15 @@ struct PPMatchCell: View {
                 
                 HStack(spacing: 16) {
                     VStack(alignment: .leading, spacing: 4) {
-                        Text("\(matchData.teammates ?? "add.details")")
-                            .font(.headline)
-                            .foregroundColor(.ppGreenBall)
+                        if (matchData.teammates ?? "").isEmpty || (matchData.location ?? "").isEmpty {
+                            Text("Añade informacion")
+                                .font(.headline)
+                                .foregroundColor(.orange)
+                        } else {
+                            Text("\(matchData.teammates ?? "")")
+                                .font(.headline)
+                                .foregroundColor(.ppGreenBall)
+                        }
                         
                         Text("\(matchData.location ?? "")")
                             .font(.subheadline)
@@ -74,7 +80,7 @@ struct PPMatchCell: View {
                     if ((matchData.teammates ?? "").isEmpty ||
                         (matchData.location ?? "").isEmpty ) {
                         Circle()
-                            .fill(Color.red)
+                            .fill(Color.orange)
                             .frame(width:10)
                             .opacity(0.8)
                             .shadow(color: .gray, radius: 2, x: 1, y: 1)
