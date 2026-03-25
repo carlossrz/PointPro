@@ -10,22 +10,45 @@ import SwiftData
 
 @main
 struct PointProApp: App {
+    @UIApplicationDelegateAdaptor(AppDelegate.self) var appDelegate
+    
     var sharedModelContainer: ModelContainer = {
         let schema = Schema([
-            Item.self,
+            MatchData.self,
+            GameScore.self
         ])
-        let modelConfiguration = ModelConfiguration(schema: schema, isStoredInMemoryOnly: false)
+        let config = ModelConfiguration("PointProBBDD", schema: schema, isStoredInMemoryOnly:false)
+        
+#if DEBUG
+        if ProcessInfo.processInfo.environment["XCODE_RUNNING_FOR_PREVIEWS"] == "1" {
+            do {
+                return try ModelContainer(
+                    for: schema,
+                    configurations: [ModelConfiguration(schema: schema, isStoredInMemoryOnly: true)]
+                )
+            } catch {
+                fatalError("❌ Preview failed to load container: \(error)")
+            }
+        }
+#endif
 
         do {
-            return try ModelContainer(for: schema, configurations: [modelConfiguration])
+            return try ModelContainer(for: schema, configurations: [config])
         } catch {
-            fatalError("Could not create ModelContainer: \(error)")
+            fatalError("❌ Failed to load main container: \(error)")
         }
     }()
-
+    
     var body: some Scene {
         WindowGroup {
             ContentView()
+                .environmentObject(AppState.shared)
+                .environmentObject(SettingsService.shared)
+                .task {
+                    // Configure CRUD service early with the main context
+                    CRUDDataService.shared.configure(sharedModelContainer.mainContext)
+                }
+                .accentColor(SettingsService.shared.accentColor)
         }
         .modelContainer(sharedModelContainer)
     }

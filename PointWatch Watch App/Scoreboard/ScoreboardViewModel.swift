@@ -1,6 +1,9 @@
 import Foundation
+import os
 
 class ScoreboardViewModel: ObservableObject {
+    private let logger = Logger(subsystem: "com.pointpro.watch", category: "ScoreboardViewModel")
+
     @Published var team: Int = 1
     
     @Published var pointA: String = "0"
@@ -12,10 +15,10 @@ class ScoreboardViewModel: ObservableObject {
     @Published var liveGameScores: [(team1: Int, team2: Int)] = [(0,0)]
     
     @Published var matchData = MatchData()
-    
-    @Published var isOpenSet: Bool = false
     @Published var shouldDismiss = false
+    @Published var isTieBreak =  false
     
+    let sessionManager = WatchSessionManager()
     
     let pointsMatch = ["0", "15", "30", "40", "ADV"]
     
@@ -56,9 +59,6 @@ class ScoreboardViewModel: ObservableObject {
             pointB = currentPoints
         }
     }
-    func tieBreakSumPoint() {
-        
-    }
     
     func globalSumPoint(team: Int) {
         if team == 1 {
@@ -66,24 +66,32 @@ class ScoreboardViewModel: ObservableObject {
         } else {
             globalPointB += 1
         }
-        
+
         liveGameScores.removeLast()
         liveGameScores.append((globalPointA, globalPointB))
-        
+
         let difference = abs(globalPointA - globalPointB)
-        
+        let currentOrder = matchData.games.count
+
         if (globalPointA >= 6 || globalPointB >= 6) && difference >= 2 {
-            matchData.games.append(GameScore(team1: globalPointA, team2: globalPointB))
+            let newGame = GameScore(team1: globalPointA, team2: globalPointB, order: currentOrder)
+            matchData.games.append(newGame)
             clearData()
+
             if matchData.pointType.numberOfGames == matchData.games.count {
-                print("Partido finalizado")
+                logger.info("Partido finalizado")
+                saveData()
                 self.shouldDismiss = true
             }
         } else if (globalPointA == globalPointB) && (globalPointA >= 6) {
-            print("tie break perro!")
-            // nueva pantalla donde se plantee el tie-break ?? 
+            let tieBreakGame = GameScore(team1: globalPointA, team2: globalPointB, order: currentOrder)
+            matchData.games.append(tieBreakGame)
+
+            clearData()
+            isTieBreak = true
         }
     }
+
     func restPoint() {
         var currentPoints = (team == 1) ? pointA : pointB
         var currentIndex = pointsMatch.firstIndex(of: currentPoints) ?? 0
@@ -100,16 +108,45 @@ class ScoreboardViewModel: ObservableObject {
     }
     
     func clearData() {
-        liveGameScores.removeLast()
+        if !liveGameScores.isEmpty {
+            liveGameScores.removeLast()
+        }
         liveGameScores = [(0,0)]
         globalPointA = 0
         globalPointB = 0
-        isOpenSet.toggle()
         resetPoints()
         
     }
     func resetPoints() {
         pointA = "0"
         pointB = "0"
+    }
+    
+    private func appendPartialGameIfNeeded() {
+        // If there's an ongoing game with non-zero score, append it so partial results are saved
+        let currentA = globalPointA
+        let currentB = globalPointB
+        guard currentA != 0 || currentB != 0 else { return }
+
+        // If last game already matches current partial score, don't duplicate
+        if let last = matchData.games.last {
+            if last.team1 == currentA && last.team2 == currentB {
+                return
+            }
+        }
+
+        let newGame = GameScore(team1: currentA, team2: currentB, order: matchData.games.count)
+        matchData.games.append(newGame)
+    }
+
+    func saveData() {
+        // Ensure partial current game is recorded before sending
+        appendPartialGameIfNeeded()
+
+        #if targetEnvironment(simulator)
+                    sessionManager.sendMessageMatchResult(match:matchData)
+        #else
+                    sessionManager.sendMatchResult(match:matchData)
+        #endif
     }
 }

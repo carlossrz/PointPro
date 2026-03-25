@@ -7,15 +7,15 @@
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
-            uuid = "BCD1D869-8323-4269-9D33-530F68E50961"
-            shouldBeEnabled = "No"
+            uuid = "DA5DC5F6-A731-4B8B-A765-381673D2F288"
+            shouldBeEnabled = "Yes"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "PointWatch Watch App/InfoMatch/InfoMatchView.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "40"
-            endingLineNumber = "40"
+            startingLineNumber = "45"
+            endingLineNumber = "45"
             landmarkName = "body"
             landmarkType = "24">
          </BreakpointContent>
@@ -23,16 +23,16 @@
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
-            uuid = "BC1EFC76-31FF-46D5-B2C6-BDEA20D923B2"
+            uuid = "7C8A38A2-18B4-4037-839D-81A6EF585B50"
             shouldBeEnabled = "Yes"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "PointWatch Watch App/Scoreboard/ScoreboardViewModel.swift"
+            filePath = "PointPro/PhoneSessionManager.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "76"
-            endingLineNumber = "76"
-            landmarkName = "globalSumPoint(team:)"
+            startingLineNumber = "42"
+            endingLineNumber = "42"
+            landmarkName = "handleIncomingMatchData(from:)"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
