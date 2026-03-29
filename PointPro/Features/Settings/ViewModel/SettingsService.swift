@@ -30,7 +30,7 @@ final class SettingsService: ObservableObject {
     }
 
     // Available accent color options (should match Asset Catalog names)
-    let accentOptions: [String] = ["PPBlue", "PPBeige", "PPGreenBall"]
+    let accentOptions: [String] = ["PPBlue", "PPOrange", "PPBlack"]
 
     private init() {}
 

@@ -8,7 +8,7 @@ struct SettingsView: View {
             Form {
                 Section(header: Text("General")) {
                     Toggle("Notificaciones locales", isOn: $settings.enableNotifications)
-                        .onChange(of: settings.enableNotifications) { _ in settings.syncToWatch() }
+                        .onChange(of: settings.enableNotifications) { _, _ in settings.syncToWatch() }
                 }
 
                 Section(header: Text("Formato por defecto")) {
@@ -18,7 +18,7 @@ struct SettingsView: View {
                         }
                     }
                     .pickerStyle(.segmented)
-                    .onChange(of: settings.defaultMatchFormatRaw) { _ in settings.syncToWatch() }
+                    .onChange(of: settings.defaultMatchFormatRaw) { _, _ in settings.syncToWatch() }
                     
                     Picker("Posición", selection: $settings.defaultPositionRaw) {
                         ForEach(["left", "right"], id: \.self) { pos in
@@ -26,7 +26,7 @@ struct SettingsView: View {
                         }
                     }
                     .pickerStyle(.segmented)
-                    .onChange(of: settings.defaultPositionRaw) { _ in settings.syncToWatch() }
+                    .onChange(of: settings.defaultPositionRaw) { _, _ in settings.syncToWatch() }
                 }
 
                 Section(header: Text("Color de acento")) {
